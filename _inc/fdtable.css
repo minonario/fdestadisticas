@@ -1,0 +1,191 @@
+.articulo-home {
+    display: flex;
+    flex-direction: row;
+    margin: 0 0 2em;
+    float: left;
+}
+
+@media(min-width:768px){
+    .wpsp-col-1,.wpsp-col-10,.wpsp-col-11,.wpsp-col-12,.wpsp-col-2,.wpsp-col-20,.wpsp-col-3,.wpsp-col-4,.wpsp-col-5,.wpsp-col-6,.wpsp-col-7,.wpsp-col-8,.wpsp-col-9{
+        float:left
+    }
+    .wpsp-col-1{
+        width:8.333333%
+    }
+    .wpsp-col-2{
+        width:16.666667%
+    }
+    .wpsp-col-3{
+        width:25%
+    }
+    .wpsp-col-4{
+        width:33.333%
+    }
+    .wpsp-col-5{
+        width:41.666667%
+    }
+    .wpsp-col-6{
+        width:50%
+    }
+    .wpsp-col-7{
+        width:58.333333%
+    }
+    .wpsp-col-8{
+        width:66.666667%
+    }
+    .wpsp-col-9{
+        width:75%
+    }
+    .wpsp-col-10{
+        width:83.333333%
+    }
+    .wpsp-col-11{
+        width:91.666667%
+    }
+    .wpsp-col-12{
+        width:100%
+    }
+    .wpsp-col-20{
+        width:20%
+    }
+}
+
+table.dataTable tbody th, table.dataTable tbody td {
+  padding: 4px 8px !important;
+  font-size: 14px;
+}
+
+.first-three-rows {
+  display: flex;
+}
+.wpsp-col-4 select, .last-combo-row select {
+  width: 100%;
+}
+.main-fd select {
+  height: 30px;
+  padding: 0 10px;
+}
+.main-fd .wpsp-col-4 {
+  padding-right: 15px;
+}
+.main-fd .wpsp-col-4:last-child {
+  padding-right: 0px;
+}
+.last-combo-row {
+  margin-top: 10px;
+}
+
+.render_table table.dataTable tbody td:first-child {
+  white-space: nowrap;
+}
+.main-fd {
+    position: relative;
+}
+.center-block.loadingp {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.center-block {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+.loader {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background-color: #eceaea;
+    z-index: 9;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    left: 0;
+    bottom: 0;
+    margin: auto;
+}
+.visible {
+    visibility: visible !important;
+}
+.oculto {
+    display: none !important;
+}
+.visually-hidden, .visually-hidden-focusable:not(:focus):not(:focus-within) {
+    position: absolute!important;
+    width: 1px!important;
+    height: 1px!important;
+    padding: 0!important;
+    margin: -1px!important;
+    overflow: hidden!important;
+    clip: rect(0,0,0,0)!important;
+    white-space: nowrap!important;
+    border: 0!important;
+}
+
+
+@keyframes spinner-border {
+  to { transform: rotate(360deg); }
+}
+
+.spinner-border {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  vertical-align: text-bottom;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border .75s linear infinite;
+}
+
+.center {
+  text-align: center !important;
+}
+.right {
+  text-align: right !important;
+}
+.left {
+  text-align: left !important;
+}
+
+.venezuela {
+  background-image: url(img/banderas/Venezuela.png);
+  background-repeat: no-repeat;
+  position: relative;
+  width: 25px;
+  height: 15px;
+  display: flex;
+}
+
+.colombia {
+  background-image: url(img/banderas/Colombia.png);
+  background-repeat: no-repeat;
+  position: relative;
+  width: 25px;
+  height: 15px;
+  display: flex;
+}
+
+.social-ot {
+  position: relative;
+}
+ul.social-list {
+  position: relative;
+  display: inline-block;
+  padding-left: 0;
+}
+ul.social-list li {
+  display: inline;
+  margin: 0 20px;
+}
+ul.social-list li:first-child {
+  margin-left: 0;
+}
+ul.social-list li:last-child {
+  margin-right: 0;
+}

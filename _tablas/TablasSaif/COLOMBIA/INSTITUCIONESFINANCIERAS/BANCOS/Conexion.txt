@@ -1,0 +1,2 @@
+Activos Totales;ActivosTotales;COP;0;
+Inversiones;Inversiones;COP;0;

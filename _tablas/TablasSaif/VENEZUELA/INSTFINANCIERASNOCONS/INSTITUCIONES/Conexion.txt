@@ -1,0 +1,4 @@
+Activos Totales;TotalActivo;VEF;0;
+Patrimonio;Patrimonio;VEF;0;
+Creditos;Creditos;VEF;0;
+Morosidad;Morosidad;VEF;0;

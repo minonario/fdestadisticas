@@ -1,0 +1,2 @@
+Compañías de Seguro;SEGUROS;Seg;seguros;0;
+Instituciones Financieras;INSTFINANCIERASNOCONS;IFnc;financieras;1;
