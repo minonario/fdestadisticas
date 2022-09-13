@@ -1,2 +1,0 @@
-Sistema;INSTITUCIONES;IF;sistemas;0;
-Bancos;BANCOS;Bco;bancos;0;

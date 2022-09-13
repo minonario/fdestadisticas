@@ -22,13 +22,11 @@ class FDEstadisticas_Admin {
 		self::$initiated = true;
 
 		add_action( 'admin_init', array( 'FDEstadisticas_Admin', 'admin_init' ) );
-		add_action( 'admin_menu', array( 'FDEstadisticas_Admin', 'admin_menu' ), 5 ); # Priority 5, so it's called before Jetpack's admin_menu.
+		add_action( 'admin_menu', array( 'FDEstadisticas_Admin', 'admin_menu' ), 5 );
 		//add_action( 'admin_notices', array( 'FDEstadisticas_Admin', 'display_notice' ) );
 		add_action( 'admin_enqueue_scripts', array( 'FDEstadisticas_Admin', 'load_resources' ) );
-
 		add_filter( 'plugin_action_links', array( 'FDEstadisticas_Admin', 'plugin_action_links' ), 10, 2 );
 		add_filter( 'plugin_action_links_'.plugin_basename( plugin_dir_path( __FILE__ ) . 'fdestadisticas.php'), array( 'FDEstadisticas_Admin', 'admin_plugin_settings_link' ) );
-	
 		//add_filter( 'all_plugins', array( 'FDEstadisticas_Admin', 'modify_plugin_description' ) );
 	}
 
@@ -40,8 +38,12 @@ class FDEstadisticas_Admin {
 			}
 		}
                 
+                // JLMA - FEATURE 01-09-2022
+                if(isset($_POST) && isset($_POST['option_page']) &&  $_POST['option_page'] === 'ds8-settings-group') {
+                    update_option('plugin_permalinks_flushed', 0);
+                }
+                
                 register_setting('ds8-settings-group', 'ds8_tabla_page');
-
 		load_plugin_textdomain( 'fdestadisticas' );
 	}
 

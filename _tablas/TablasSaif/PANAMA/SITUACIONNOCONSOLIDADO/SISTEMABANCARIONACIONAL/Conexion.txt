@@ -1,0 +1,12 @@
+﻿Activos Totales; ActivosTotales; PAB. MM. Participación (SBN); 1;
+Cartera Crediticia; CarteraCrediticia; PAB. MM. Participación (SBN); 0;
+Préstamos Locales; PrestamosLocales; PAB. MM; 0;
+Inversiones en Valores; InversionesValores; PAB. MM; 0;
+Depósitos; Depositos; PAB. MM. Participación (SBN); 0;
+Patrimonio; Patrimonio; PAB. MM. Participación (SBN); 0;
+Ingresos por Intereses; IngIntereses; PAB. MM; 0;
+Egresos Generales; EgrGenerales; PAB. MM; 0;
+Resultado Neto; ResultadoNeto; PAB. MM; 0;
+Activos Líquidos / Depósitos; ActLiquidosDepositos; PAB. %; 0;
+ROA; ROA; PAB. %; 0;
+Patrimonio / Activos Totales; PatrimonioActivo; PAB. %; 0;

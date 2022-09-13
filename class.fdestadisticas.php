@@ -3,7 +3,9 @@
 class FDEstadisticas {
 
         private static $initiated = false;
+        private static $is_sassy_social = false;
         private static $combos;
+        private static $page_shortcode;
         
         const MAINDIR = FDESTADISTICAS__PLUGIN_DIR . '_tablas/TablasSaif';
 
@@ -18,12 +20,21 @@ class FDEstadisticas {
 	 */
 	private static function init_hooks() {
 		self::$initiated = true;
+                self::$is_sassy_social = self::is_plugin_active( 'sassy-social-share/sassy-social-share.php' );
 
                 add_rewrite_tag('%pais%', '([^&]+)');
                 add_rewrite_tag('%formato%', '([^&]+)');
                 add_rewrite_tag('%tipo%', '([^&]+)');
                 add_rewrite_tag('%tabla%', '([^&]+)');
-                add_rewrite_rule( '([a-z0-9-]+)/([a-z0-9-]+)/([a-z0-9-]+)/tabla/([a-z0-9-]+)[/]?$', 'index.php?&page_id=2&pais=$matches[1]&formato=$matches[2]&tipo=$matches[3]&tabla=$matches[4]', 'top' );
+                
+                self::$page_shortcode = get_option('ds8_tabla_page');
+                $front_page = get_option('page_on_front');
+                
+                if(self::$page_shortcode!=$front_page){
+                    add_rewrite_rule( "([a-z0-9-]+)/([a-z0-9-]+)/([a-z0-9-]+)/([a-z0-9-]+)/tabla/([a-z0-9-]+)[/]?$", 'index.php?&pagename=$matches[1]&pais=$matches[2]&formato=$matches[3]&tipo=$matches[4]&tabla=$matches[5]', 'top' );
+                }else{
+                    add_rewrite_rule( '([a-z0-9-]+)/([a-z0-9-]+)/([a-z0-9-]+)/tabla/([a-z0-9-]+)[/]?$', 'index.php?&page_id='.self::$page_shortcode.'&pais=$matches[1]&formato=$matches[2]&tipo=$matches[3]&tabla=$matches[4]', 'top' );
+                }
                 
                 if( !get_option('plugin_permalinks_flushed') ) {
                     flush_rewrite_rules(false);
@@ -31,18 +42,24 @@ class FDEstadisticas {
                 }
                 
                 //add_action('init', array('FDEstadisticas', 'custom_rewrite_rule'), 10, 0);
+                add_filter('the_content', array('FDEstadisticas', 'fd_remove_shortcode_from_index'));
                 add_action('wp_enqueue_scripts', array('FDEstadisticas', 'fd_tables_javascript'), 10);
                 add_action('wp_ajax_fdtable_action', array('FDEstadisticas', 'ajax_render_init_table'));
                 add_action('wp_ajax_nopriv_fdtable_action', array('FDEstadisticas', 'ajax_render_init_table'));
-                
                 //add_filter('template_include', array('FDEstadisticas', 'ds8_template' ) );
                 //add_action( 'parse_request', array('FDEstadisticas', 'change_post_per_page_wpent' ) );
                 add_action('template_redirect', array('FDEstadisticas', 'ds8_redirect') ); 
                 //add_filter('query_vars', array('FDEstadisticas', 'ds8_register_query_var') );
                 add_filter('redirect_canonical', array('FDEstadisticas', 'canonical'), 10, 2);
-                
                 add_shortcode( 'fdtable', array('FDEstadisticas', 'fdtable_shortcode_fn') );
 	}
+        
+        public static function fd_remove_shortcode_from_index( $content ) {
+            if ( get_the_ID() != self::$page_shortcode) {
+              $content = preg_replace('/\[fdtable(.+?)?\](?:(.+?)?\[\/fdtable\])?/i', '', $content);
+            }
+            return $content;
+        }
         
         public static function canonical($redirect_url, $requested_url) {
           return $requested_url;
@@ -54,10 +71,11 @@ class FDEstadisticas {
         }
         
         public static function ds8_redirect(){
-            //$id = get_the_ID();
-            $is_front = is_front_page();
+            $id = get_the_ID();
+            $pais = get_query_var( 'pais' );
             
-            if( get_query_var( 'pais' ) && $is_front) {
+            //if( get_query_var( 'pais' ) && $is_front) {
+            if( self::$page_shortcode == $id && get_query_var( 'pais' ) ){
                 $pais = get_query_var( 'pais' );
                 if($pais) {
                     // FEATURE 27-08-2022 Check if exist table given the query vars
@@ -108,25 +126,48 @@ class FDEstadisticas {
             }
             return $query;
         }
+        
+        /**
+	 * Check if plugin is active
+	 *
+	 * @since    1.0
+	 */
+	private static function is_plugin_active( $plugin_file ) {
+		return in_array( $plugin_file, apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) );
+	}
 
         public static function fd_tables_javascript(){
           
-            wp_register_script('fdtable', plugin_dir_url( __FILE__ ) . '_inc/fdtable.js', array('jquery'), FDESTADISTICAS_VERSION);
-            $localize_script_args = array(
-                'ajaxurl'         => admin_url('admin-ajax.php'),
-                'security'        => wp_create_nonce( 'fd_security_nonce' ),
-            );
-            wp_localize_script('fdtable', 'fdtable', $localize_script_args );
-            wp_enqueue_script('fdtable' );
+            $page_shortcode = get_option('ds8_tabla_page');
+            if (self::$page_shortcode == get_option('page_on_front')){
+              $slug = '';
+            }else{
+              $slug = basename(get_page_link($page_shortcode)).'/';
+            }
+            
+            if ( get_queried_object_id() == $page_shortcode){
+          
+                wp_register_script('fdtable', plugin_dir_url( __FILE__ ) . '_inc/fdtable.js', array('jquery'), FDESTADISTICAS_VERSION);
+                $localize_script_args = array(
+                    'ajaxurl'         => admin_url('admin-ajax.php'),
+                    'security'        => wp_create_nonce( 'fd_security_nonce' ),
+                    'baseslug'        => $slug, 
+                    'is_sassy_active' => self::$is_sassy_social
+                );
+                wp_localize_script('fdtable', 'fdtable', $localize_script_args );
+                wp_enqueue_script('fdtable' );
 
-            wp_enqueue_style('fdtable-css', plugin_dir_url( __FILE__ ) . '_inc/fdtable.css', array(), FDESTADISTICAS_VERSION);
-            wp_enqueue_style('datatables-css', 'https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css', array(), FDESTADISTICAS_VERSION);
-            wp_enqueue_style('datatables-fixedheader-css', 'https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.dataTables.min.css', array(), FDESTADISTICAS_VERSION);
-            wp_enqueue_style('datatables-fixedcolumn-css', 'https://cdn.datatables.net/fixedcolumns/4.1.0/css/fixedColumns.dataTables.min.css', array(), FDESTADISTICAS_VERSION);
+                wp_enqueue_style('fdtable-css', plugin_dir_url( __FILE__ ) . '_inc/fdtable.css', array(), FDESTADISTICAS_VERSION);
+                wp_enqueue_style('datatables-css', 'https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css', array(), FDESTADISTICAS_VERSION);
+                wp_enqueue_style('datatables-fixedheader-css', 'https://cdn.datatables.net/fixedheader/3.2.4/css/fixedHeader.dataTables.min.css', array(), FDESTADISTICAS_VERSION);
+                wp_enqueue_style('datatables-fixedcolumn-css', 'https://cdn.datatables.net/fixedcolumns/4.1.0/css/fixedColumns.dataTables.min.css', array(), FDESTADISTICAS_VERSION);
 
-            wp_enqueue_script('datatables', 'https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js', array('jquery'), '3.3.5', true);
-            wp_enqueue_script('datatables-fixedheader', 'https://cdn.datatables.net/fixedheader/3.2.4/js/dataTables.fixedHeader.min.js', array('jquery'), '3.3.5', true);
-            wp_enqueue_script('datatables-fixedcolumn', 'https://cdn.datatables.net/fixedcolumns/4.1.0/js/dataTables.fixedColumns.min.js', array('jquery'), '3.3.5', true);
+                wp_enqueue_script('datatables', 'https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js', array('jquery'), '3.3.5', true);
+                wp_enqueue_script('datatables-fixedheader', 'https://cdn.datatables.net/fixedheader/3.2.4/js/dataTables.fixedHeader.min.js', array('jquery'), '3.3.5', true);
+                wp_enqueue_script('datatables-fixedcolumn', 'https://cdn.datatables.net/fixedcolumns/4.1.0/js/dataTables.fixedColumns.min.js', array('jquery'), '3.3.5', true);
+                wp_enqueue_script('moment', '"https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"', array('jquery'), '3.3.5', true);
+                wp_enqueue_script('datatables-sort', plugin_dir_url( __FILE__ ) . '_inc/sort.js', array('jquery'), '3.3.5', true);
+            }
         }
 
         public static function ajax_render_init_table() {
@@ -136,7 +177,7 @@ class FDEstadisticas {
                   wp_die();
                 }
 
-                $dropdowns = array('fdpais' => '', 'fdformato' => '', 'fdtipo' => ''); //'fdindicador' => '');
+                $dropdowns = array('fdpais' => '', 'fdformato' => '', 'fdtipo' => '');
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   extract($_POST);
                 }else{
@@ -160,30 +201,28 @@ class FDEstadisticas {
                       if ($selection == $key) { $inside = true; $next[$key] = $filters[$key]; }
                       if ($inside) {
                         $tmp = self::get_dropdown($selection, $key, $filters, $next);
-                        $result[] = array('id' => $order[$count + 1], 'combo' => $tmp[0], 'selected' => $tmp[1]);
+                        $result[] = array('id' => $order[$count + 1], 'combo' => $tmp[0], 'selected' => ltrim($tmp[1]));
                         $next[$order[$count + 1]] = $tmp[1];
                       }
                       $count++;
                   }
                 }
 
-                $is_valid = true; //isset( $_POST['html'] ) && isset( $_POST['tipo'] ); //phpcs:ignore WordPress.Security.NonceVerification.Missing
-                if ( $is_valid ) {
-                    if ( isset($selection) && $selection != 'fdindicador') {
-                      $main_dir = FDESTADISTICAS__PLUGIN_DIR . '_tablas/TablasSaif/'.$next['fdpais'].'/'.$next['fdformato'].'/'.$next['fdtipo'].'/'.$next['fdindicador'].'.html';
-                    }else{
-                      $main_dir = FDESTADISTICAS__PLUGIN_DIR . '_tablas/TablasSaif/'.$pais.'/'.$formato.'/'.$tipo.'/'.$html.'.html';
-                    }
-
-                    $tabla = stripslashes(file_get_contents($main_dir));
-                    // FIND AND REPLACE
-                    if ($pais == 'VENEZUELA'){
-                    $tabla = str_replace('#ve#',plugin_dir_url( __FILE__ ).'_inc/img/banderas/Venezuela.png',$tabla);
-                    }
-                    if ($pais == 'COLOMBIA'){
-                    $tabla = str_replace('#co#',plugin_dir_url( __FILE__ ).'_inc/img/banderas/Colombia.png',$tabla);
-                    }
+                if ( isset($selection) && $selection != 'fdindicador') {
+                  $main_dir = FDESTADISTICAS__PLUGIN_DIR . '_tablas/TablasSaif/'.$next['fdpais'].'/'.$next['fdformato'].'/'.$next['fdtipo'].'/'.ltrim($next['fdindicador']).'.html';
+                }else{
+                  $main_dir = FDESTADISTICAS__PLUGIN_DIR . '_tablas/TablasSaif/'.$pais.'/'.$formato.'/'.$tipo.'/'.$html.'.html';
                 }
+
+                $tabla = stripslashes(file_get_contents($main_dir));
+                // FIND AND REPLACE
+                if ($pais == 'VENEZUELA'){
+                $tabla = str_replace('#ve#',plugin_dir_url( __FILE__ ).'_inc/img/banderas/Venezuela.png',$tabla);
+                }
+                if ($pais == 'COLOMBIA'){
+                $tabla = str_replace('#co#',plugin_dir_url( __FILE__ ).'_inc/img/banderas/Colombia.png',$tabla);
+                }
+  
                 $data = array('combos' => $result, 'data' => $tabla);
                 wp_send_json($data);
         }
@@ -203,15 +242,15 @@ class FDEstadisticas {
 
             $file = @fopen($dir."Conexion.txt", "r");
               if ($file) {
-                  while (($line = fgets($file, 4096)) !== false) {
+                  while (($line = fgets($file)) !== false) {
 
-                          $data = explode(';', $line);
+                          $data = explode(';', trim($line));
                           if((int)$data[4] == 1) {
-                                  $combo_formato[] = array('data-foo' => $data[2], 'value' => $data[1], 'title' => utf8_encode($data[0]), 'dataurl' => $data[3] );
+                                  $combo_formato[] = array('datafoo' => $data[2], 'value' => ltrim($data[1]), 'title' => $data[0], 'dataurl' => ltrim($data[3]) );
                                   $p_selected = $data[1];
                           }
                           else {
-                                  $combo_formato[] = array('data-foo' => $data[2], 'value' => $data[1], 'title' => utf8_encode($data[0]) , 'dataurl' => $data[3] );
+                                  $combo_formato[] = array('datafoo' => $data[2], 'value' => ltrim($data[1]), 'title' => $data[0] , 'dataurl' => ltrim($data[3]) );
                           }
                           if ($count == 0){
                             $aux_selectd = $data[1];
@@ -270,7 +309,7 @@ class FDEstadisticas {
                         }else{
                           $selection = ($data['default'] == 1 ? "selected" : "");
                         }
-                        return '<option data-foo="'.$data['title'].'" value="'.  $data['value'].'" data-url="'.(array_key_exists('url',$data) ? $data["url"] : $data['value']).'"  '.$selection.'>' . utf8_encode($data['title']) . '</option>';
+                        return '<option data-title2="'.$data['title2'].'" data-foo="'.$data['title'].'" value="'.ltrim($data['value']).'" data-url="'.ltrim(array_key_exists('url',$data) ? $data["url"] : $data['value']).'"  '.$selection.'>' .$data['title']. '</option>';
                     }, $array_mapped);
 
                     // check and get if exists default selection
@@ -328,20 +367,29 @@ class FDEstadisticas {
              
             }
             $combo_formato = implode(' ', array_map(function ($entry) {
-              $ff = '';
               return implode(' ',$entry);
             }, $dropdowns));
 
             $html .= $combo_formato;
             $html .= '</div>';
-            $html .= '<div class="render_table display nowrap wp-container-7"></div>';
-            $html .= '<div class="wp-container-7">'
-                    . '<ul class="social-list">'
-                    . '<li><a class="ot-tweet social-ot" href="https://twitter.com/intent/tweet?" data-via="finanzasdigital" target="_blank">Tweet</a></li>'
-                    . '<li><a class="ot-face social-ot" href="https://www.facebook.com/sharer/sharer.php?" title="Facebook" rel="nofollow noopener" target="_blank">Facebook</a></li>'
-                    . '<li><a class="ot-link social-ot" href="http://www.linkedin.com/shareArticle?mini=true&url=" data-url="">Linkedin</a></li>'
-                    . '</ul>'
-                    . '</div>';
+            $html .= '<div class="tablatitulo"></div>';
+            $html .= '<div id="fdtable" class="render_table display nowrap wp-container-7"></div>';
+            $html .= '<div class="wp-container-7 fdinterna">
+                    <div class="fdfuente"><strong>Fuente:</strong> <a class="fdsource" href="https://glscope.com/saif">Sistema Automatizado de Información Financiera (S.A.I.F)</a></div>
+                    <p><strong>R.:</strong> Ranking</p>
+                    <p><strong>P.M.:</strong> Participación de Mercado</p>
+                    <p><strong>N.D.:</strong> No disponible</p>
+                    </div>';
+            
+            if (!self::$is_sassy_social){
+              $html .= '<div class="wp-container-7">'
+                      . '<ul class="social-list">'
+                      . '<li><a class="ot-tweet social-ot" href="https://twitter.com/intent/tweet?" data-via="finanzasdigital" target="_blank">Tweet</a></li>'
+                      . '<li><a class="ot-face social-ot" href="https://www.facebook.com/sharer/sharer.php?" title="Facebook" rel="nofollow noopener" target="_blank">Facebook</a></li>'
+                      . '<li><a class="ot-link social-ot" href="http://www.linkedin.com/shareArticle?mini=true&url=" data-url="">Linkedin</a></li>'
+                      . '</ul>'
+                      . '</div>';
+            }
 
             return $html;
         }

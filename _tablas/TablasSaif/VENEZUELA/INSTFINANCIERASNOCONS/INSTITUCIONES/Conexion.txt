@@ -1,4 +1,7 @@
-Activos Totales;TotalActivo;VEF;0;
-Patrimonio;Patrimonio;VEF;0;
-Creditos;Creditos;VEF;0;
-Morosidad;Morosidad;VEF;0;
+﻿Cartera de Crédito; Creditos; VED. MM. Participación (Sistema); 1;
+Inversiones en Títulos Valores; Valores; VED. MM. Participación (Sistema); 0;
+Captaciones del Público; Captaciones; VED. MM. Participación (Sistema); 0;
+Total del Patrimonio; Patrimonio; VED. MM. Participación (Sistema); 0;
+Resultado Neto; Resultados; VED. MM. Participación (Sistema); 0;
+Cartera Inmovilizada Bruta / Cartera Bruta; Morosidad; VED. %; 0;
+Provisión Cartera / Cartera Inmovilizada; Provision; VED. %; 0;

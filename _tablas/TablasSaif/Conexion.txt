@@ -1,2 +1,2 @@
-Colombia;COLOMBIA;COL;co;0;
-Venezuela;VENEZUELA;VEN;ve;1;
+Panamá;PANAMA;PAN;pa;1;
+Venezuela;VENEZUELA;VEN;ve;0;

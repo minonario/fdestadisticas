@@ -52,7 +52,7 @@
 
 table.dataTable tbody th, table.dataTable tbody td {
   padding: 4px 8px !important;
-  font-size: 14px;
+  font-size: 14px !important;
 }
 
 .first-three-rows {
@@ -76,7 +76,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 }
 
 .render_table table.dataTable tbody td:first-child {
-  white-space: nowrap;
+  white-space: nowrap !important;
 }
 .main-fd {
     position: relative;
@@ -159,7 +159,8 @@ table.dataTable tbody th, table.dataTable tbody td {
   position: relative;
   width: 25px;
   height: 15px;
-  display: flex;
+  display: inline-flex;
+  vertical-align: middle;
 }
 
 .colombia {
@@ -168,7 +169,18 @@ table.dataTable tbody th, table.dataTable tbody td {
   position: relative;
   width: 25px;
   height: 15px;
-  display: flex;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.panama {
+  background-image: url(img/banderas/Panama.png);
+  background-repeat: no-repeat;
+  position: relative;
+  width: 25px;
+  height: 15px;
+  display: inline-flex;
+  vertical-align: middle;
 }
 
 .social-ot {
@@ -188,4 +200,66 @@ ul.social-list li:first-child {
 }
 ul.social-list li:last-child {
   margin-right: 0;
+}
+#fdtable table.tablefinanzas, table.tablefinanzas {
+  margin: 0 !important;
+}
+table.tablefinanzas thead, #fdtable table.tablefinanzas thead {
+    background-color: #353664 !important;
+    color: #fff !important;
+}
+table.dataTable.tablefinanzas thead th {
+    border-bottom: 1px solid #fff !important;
+}
+table.tablefinanzas td img {
+  width: 22px;
+  max-width: 22px;
+}
+#fdtable .dataTables_scrollHead table {
+  margin-top: 50px !important;
+}
+
+@media(max-width:768px){
+  .first-three-rows {
+    display: block;
+  }
+  .first-three-rows .wpsp-col-4 {
+    margin-bottom: 10px;
+  }
+  .main-fd .wpsp-col-4 {
+    padding-right: 0;
+  }
+  .fdtable-ajax {
+    width: 100%;
+  }
+}
+.tablatitulo h2 {
+  margin-top: 5px;
+  margin-bottom: 0;
+  text-align: center;
+}
+.tablatitulo h2:first-child {
+  margin-top: 20px;
+}
+#fdtable + div {
+  margin-top: 10px;
+  font-size: 12px;
+}
+a.fdsource, #fdtable .EstiloLink {
+  text-decoration: underline;
+  color: #3857F1;
+}
+tbody + tbody { font-weight: bold }
+.fdinterna p {
+  margin: 0;
+}
+.fdinterna .fdfuente {
+  margin-bottom: 15px;
+}
+#fdtable tr.totales {
+  background-color: #353664!important;
+}
+#fdtable table.tablefinanzas.dataTable tbody tr.totales td {
+  font-weight: bold;
+  color: #fff;
 }

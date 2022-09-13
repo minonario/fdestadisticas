@@ -20,6 +20,10 @@
 
                         <table class="form-table">
                         <?php FDEstadisticas_Admin::create_form($options); ?>
+                          <tr valign="top">
+                            <th scope="row">Ruta tablas</th>
+                            <td> <?php  echo FDESTADISTICAS__PLUGIN_DIR . '_tablas/TablasSaif/' ?></td>
+                          </tr>
                         </table>
 
                         <p class="submit">
@@ -27,18 +31,6 @@
                         </p>
 
                     </form>
-                    <?php if ( $front_page_elements !== null ) : ?>
-                    <!-- Empty input field for Address -->
-                    <table style="display:none;">
-                    <tr id="front-page-element-placeholder" class="front-page-element" style="display:none;">
-                        <th><label for="element-page-id"><?php _e('Address:') ?></label></th>
-                        <td>
-                            <textarea rows="6" cols="39" name="my-settings[element-page-id]"></textarea>
-                            <a href="#"><?php _e('Remove') ?></a>
-                        </td>
-                    </tr>
-                    </table>
-                    <?php endif; ?>
                   </div>
                   
 		</div>
