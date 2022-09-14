@@ -215,13 +215,6 @@ class FDEstadisticas {
                 }
 
                 $tabla = stripslashes(file_get_contents($main_dir));
-                // FIND AND REPLACE
-                if ($pais == 'VENEZUELA'){
-                $tabla = str_replace('#ve#',plugin_dir_url( __FILE__ ).'_inc/img/banderas/Venezuela.png',$tabla);
-                }
-                if ($pais == 'COLOMBIA'){
-                $tabla = str_replace('#co#',plugin_dir_url( __FILE__ ).'_inc/img/banderas/Colombia.png',$tabla);
-                }
   
                 $data = array('combos' => $result, 'data' => $tabla);
                 wp_send_json($data);
