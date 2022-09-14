@@ -153,34 +153,134 @@ table.dataTable tbody th, table.dataTable tbody td {
   text-align: left !important;
 }
 
+.cp {
+  background-repeat: no-repeat;
+  position: relative;
+  width: 25px;
+  height: 15px;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
 .venezuela {
   background-image: url(img/banderas/Venezuela.png);
-  background-repeat: no-repeat;
-  position: relative;
-  width: 25px;
-  height: 15px;
-  display: inline-flex;
-  vertical-align: middle;
 }
-
 .colombia {
   background-image: url(img/banderas/Colombia.png);
-  background-repeat: no-repeat;
-  position: relative;
-  width: 25px;
-  height: 15px;
-  display: inline-flex;
-  vertical-align: middle;
 }
-
 .panama {
   background-image: url(img/banderas/Panama.png);
-  background-repeat: no-repeat;
-  position: relative;
-  width: 25px;
-  height: 15px;
-  display: inline-flex;
-  vertical-align: middle;
+}
+.alemania {
+  background-image: url(img/banderas/Alemania.png);
+}
+.antillasneerlandesas {
+  background-image: url(img/banderas/AntillasNeerlandesas.png);
+}
+.argentina {
+  background-image: url(img/banderas/Argentina.png);
+}
+.bahamas {
+  background-image: url(img/banderas/Bahamas.png);
+}
+.belize {
+  background-image: url(img/banderas/Belize.png);
+}
+.bolivia {
+  background-image: url(img/banderas/Bolivia.png);
+}
+.brasil {
+  background-image: url(img/banderas/Brasil.png);
+}
+.canada {
+  background-image: url(img/banderas/Canada.png);
+}
+.chile {
+  background-image: url(img/banderas/Chile.png);
+}
+.china {
+  background-image: url(img/banderas/China.png);
+}
+.costarica {
+  background-image: url(img/banderas/CostaRica.png);
+}
+.ecuador {
+  background-image: url(img/banderas/Ecuador.png);
+}
+.elsalvador {
+  background-image: url(img/banderas/ElSalvador.png);
+}
+.espana {
+  background-image: url(img/banderas/Espana.png);
+}
+.estadosunidos {
+  background-image: url(img/banderas/EstadosUnidos.png);
+}
+.europa {
+  background-image: url(img/banderas/Europa.png);
+}
+.francia {
+  background-image: url(img/banderas/Francia.png);
+}
+.guatemala {
+  background-image: url(img/banderas/Guatemala.png);
+}
+.guyana {
+  background-image: url(img/banderas/Guyana.png);
+}
+.haiti {
+  background-image: url(img/banderas/Haiti.png);
+}
+.honduras {
+  background-image: url(img/banderas/Honduras.png);
+}
+.hongkong {
+  background-image: url(img/banderas/HongKong.png);
+}
+.italia {
+  background-image: url(img/banderas/Italia.png);
+}
+.jamaica {
+  background-image: url(img/banderas/Jamaica.png);
+}
+.japon {
+  background-image: url(img/banderas/Japon.png);
+}
+.mexico {
+  background-image: url(img/banderas/Mexico.png);
+}
+.multinacional {
+  background-image: url(img/banderas/Multinacional.png);
+}
+.nicaragua {
+  background-image: url(img/banderas/Nicaragua.png);
+}
+.panama {
+  background-image: url(img/banderas/Panama.png);
+}
+.paraguay {
+  background-image: url(img/banderas/Paraguay.png);
+}
+.peru {
+  background-image: url(img/banderas/Peru.png);
+}
+.portugal {
+  background-image: url(img/banderas/Portugal.png);
+}
+.reinounido {
+  background-image: url(img/banderas/ReinoUnido.png);
+}
+.republicadominicana {
+  background-image: url(img/banderas/RepublicaDominicana.png);
+}
+.suriname {
+  background-image: url(img/banderas/Suriname.png);
+}
+.trinidad {
+  background-image: url(img/banderas/Trinidad.png);
+}
+.uruguay {
+  background-image: url(img/banderas/Uruguay.png);
 }
 
 .social-ot {
