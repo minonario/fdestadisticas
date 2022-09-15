@@ -83,13 +83,15 @@ jQuery(function ($) {
       $('.tablatitulo').html('');
     },
     success: function (data) {
+      
       $('.render_table').html(data.data);
-      var matchdos = $('.tablefinanzas').hasClass('matchdos');
-      if (matchdos) {
-        var ordercols = [3, 5, 7];
-      } else {
-        var ordercols = [3, 4, 6, 9];
-      }
+        $('.main-fd').find('.visible').addClass('oculto');
+        var matchdos = $('.tablefinanzas').hasClass('matchdos');
+        if (matchdos){
+          var ordercols = [3,5,7];
+        }else{
+          var ordercols = [3,4,6,9];
+        }
         
       table = $('.tablefinanzas').DataTable({
         destroy: true,

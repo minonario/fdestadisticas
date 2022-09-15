@@ -236,7 +236,7 @@ class FDEstadisticas {
             $file = @fopen($dir."Conexion.txt", "r");
               if ($file) {
                   while (($line = fgets($file)) !== false) {
-
+                      if (!empty(trim($line))){
                           $data = explode(';', trim($line));
                           if((int)$data[4] == 1) {
                                   $combo_formato[] = array('datafoo' => $data[2], 'value' => ltrim($data[1]), 'title' => $data[0], 'dataurl' => ltrim($data[3]) );
@@ -248,7 +248,8 @@ class FDEstadisticas {
                           if ($count == 0){
                             $aux_selectd = $data[1];
                           }
-                    $count++;
+                          $count++;
+                      }
                   }
                   if (!feof($file)) {
                           //echo "Error: fallo inesperado\n";
@@ -276,8 +277,10 @@ class FDEstadisticas {
                     $file = @fopen($path."/Conexion.txt", "r");
                     // file parsed to array
                     while ($line = fgets($file)) {
+                      if (!empty(trim($line))){
                         $data = array_diff(explode(";", trim($line)),array(""));
                         $attributes[] = $data;
+                      }
                     }
                     fclose($file);
                     if ( $type == "tabla") { 
@@ -298,7 +301,7 @@ class FDEstadisticas {
                     $dropdowns= array_map(function ($data) use ($exist_query_var, $type, $value){
                         if ($exist_query_var){
                           $pre_value = array_key_exists('url',$data) ? $data["url"] : $data['value'];
-                          $selection = (strtolower($pre_value) == $value ? "selected" : "");
+                          $selection = strtolower(ltrim($pre_value)) === $value ? "selected" : "" ;
                         }else{
                           $selection = ($data['default'] == 1 ? "selected" : "");
                         }
@@ -323,7 +326,7 @@ class FDEstadisticas {
         
         public static function fdtable_shortcode_fn( $attributes ) {
 
-            $col_class = 'wpsp-col-4';
+            $col_class = 'wpsp-col-4'; $combo_formato = '';
             $main_dir = FDESTADISTICAS__PLUGIN_DIR . '_tablas/TablasSaif';
             $html = '<div class="main-fd">'
                     . '<div class="loading visible loader oculto">
@@ -338,30 +341,34 @@ class FDEstadisticas {
               $dropdowns = self::generate_dropdowns();
             }
             
-            foreach($dropdowns as $dropdown => &$key){
-              
-              switch($dropdown) {
-                case 'pais' :
-                    array_unshift($key,'<div class="first-three-rows"><div class="'.$col_class.'"><select class="fdtable-ajax" id="fdpais" name="fdpais">');
-                    array_push($key, '</select></div>');
-                    break;
-                case 'formato' :
-                    array_unshift($key,'<div class="'.$col_class.'"><select class="fdtable-ajax" id="fdformato" name="fdformato">');
-                    array_push($key, '</select></div>');
-                    break;
-                case 'tipo' :
-                    array_unshift($key,'<div class="'.$col_class.'"><select class="fdtable-ajax" id="fdtipo" name="fdtipo">');
-                    array_push($key, '</select></div></div>');
-                    break;
-                case 'tabla' :
-                    array_unshift($key,'<div class="last-combo-row"><select class="fdtable-ajax" id="fdindicador" name="fdindicador">');
-                    array_push($key, '</select></div>');
+            
+            if (is_array($dropdowns)){
+              foreach($dropdowns as $dropdown => &$key){
+
+                switch($dropdown) {
+                  case 'pais' :
+                      array_unshift($key,'<div class="first-three-rows"><div class="'.$col_class.'"><select class="fdtable-ajax" id="fdpais" name="fdpais">');
+                      array_push($key, '</select></div>');
+                      break;
+                  case 'formato' :
+                      array_unshift($key,'<div class="'.$col_class.'"><select class="fdtable-ajax" id="fdformato" name="fdformato">');
+                      array_push($key, '</select></div>');
+                      break;
+                  case 'tipo' :
+                      array_unshift($key,'<div class="'.$col_class.'"><select class="fdtable-ajax" id="fdtipo" name="fdtipo">');
+                      array_push($key, '</select></div></div>');
+                      break;
+                  case 'tabla' :
+                      array_unshift($key,'<div class="last-combo-row"><select class="fdtable-ajax" id="fdindicador" name="fdindicador">');
+                      array_push($key, '</select></div>');
+                }
+
               }
-             
+            
+              $combo_formato = implode(' ', array_map(function ($entry) {
+                return implode(' ',$entry);
+              }, $dropdowns));
             }
-            $combo_formato = implode(' ', array_map(function ($entry) {
-              return implode(' ',$entry);
-            }, $dropdowns));
 
             $html .= $combo_formato;
             $html .= '</div>';
