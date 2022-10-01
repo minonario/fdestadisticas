@@ -407,6 +407,10 @@ class FDEstadisticas {
 
                 include( $file );
 	}
+        
+        public static function plugin_deactivation( ) {
+            flush_rewrite_rules();
+        }
 
         /**
 	 * Attached to activate_{ plugin_basename( __FILES__ ) } by register_activation_hook()
