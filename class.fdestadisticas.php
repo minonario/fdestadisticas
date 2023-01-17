@@ -52,7 +52,16 @@ class FDEstadisticas {
                 //add_filter('query_vars', array('FDEstadisticas', 'ds8_register_query_var') );
                 add_filter('redirect_canonical', array('FDEstadisticas', 'canonical'), 10, 2);
                 add_shortcode( 'fdtable', array('FDEstadisticas', 'fdtable_shortcode_fn') );
+                add_filter( 'wpseo_canonical', array('FDEstadisticas', 'urlcanonical'));
+                add_filter( 'get_canonical_url', array('FDEstadisticas', 'urlcanonical'),10, 1);
 	}
+        
+        public static function urlcanonical($canonical_url ){
+          
+          $protocol=$_SERVER['PROTOCOL'] = isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) ? 'https' : 'http';
+          $url = $protocol.'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+          return $url;
+        }
         
         public static function fd_remove_shortcode_from_index( $content ) {
             if ( get_the_ID() != self::$page_shortcode) {
