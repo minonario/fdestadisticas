@@ -52,7 +52,42 @@ class FDEstadisticas {
                 //add_filter('query_vars', array('FDEstadisticas', 'ds8_register_query_var') );
                 add_filter('redirect_canonical', array('FDEstadisticas', 'canonical'), 10, 2);
                 add_shortcode( 'fdtable', array('FDEstadisticas', 'fdtable_shortcode_fn') );
+                add_filter( 'get_canonical_url', array('FDEstadisticas', 'fdtable_canonical'), 10, 2  ); // $canonical_url, $post 
+                add_filter( 'wpseo_canonical',  array('FDEstadisticas', 'prefix_filter_canonical_example') );
 	}
+        
+        /**
+          * Filters the canonical URL.
+          *
+          * @param string $canonical The current page's generated canonical URL.
+          *
+          * @return string The filtered canonical URL.
+          */
+        public static function prefix_filter_canonical_example( $canonical ) {
+          if ( is_page( 'estadisticas' ) ) {
+              $pais = get_query_var( 'pais' );
+              if ($pais !== ''){
+                global $urlestadistica;
+                if ( isset($urlestadistica) && $urlestadistica !== ''){
+                  $canonical = $urlestadistica;
+                }
+              }
+          }
+
+          return $canonical;
+        }
+        
+        public static function fdtable_canonical($canonical_url, $post ) {
+          
+          $pais = get_query_var( 'pais' );
+          if ($pais !== ''){
+            global $urlestadistica;
+            if ( isset($urlestadistica) && $urlestadistica !== ''){
+              $canonical_url = $urlestadistica;
+            }
+          }
+          return $canonical_url;
+        }
         
         public static function fd_remove_shortcode_from_index( $content ) {
             if ( get_the_ID() != self::$page_shortcode) {
@@ -62,6 +97,11 @@ class FDEstadisticas {
         }
         
         public static function canonical($redirect_url, $requested_url) {
+          $pais = get_query_var( 'pais' );
+          if ($pais !== ''){
+            global $urlestadistica;
+            $urlestadistica = $requested_url;
+          }
           return $requested_url;
         }
         
