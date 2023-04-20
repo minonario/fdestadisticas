@@ -61,9 +61,15 @@ table.dataTable tbody th, table.dataTable tbody td {
 .wpsp-col-4 select, .last-combo-row select {
   width: 100%;
 }
-.main-fd select {
+.main-fd {
+  margin-top: 20px
+}
+/*.main-fd select {
   height: 30px;
-  padding: 0 10px;
+  padding: 0 25px 0px 10px;
+}*/
+select#fdindicador,select.fdtable-ajax {
+  max-width: 100%;
 }
 .main-fd .wpsp-col-4 {
   padding-right: 15px;
@@ -344,6 +350,7 @@ table.tablefinanzas td img {
 #fdtable + div {
   margin-top: 10px;
   font-size: 12px;
+  margin-bottom: 20px
 }
 a.fdsource, #fdtable .EstiloLink {
   text-decoration: underline;
