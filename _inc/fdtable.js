@@ -241,6 +241,14 @@ jQuery(function ($) {
         $fdtipo_url = $('#fdtipo').find(':selected').attr('data-url');
         var html = $('#fdindicador').val();
         var url = fdtable.baseslug + $pais_url.toLowerCase()+'/'+$formato_url.toLowerCase()+'/'+$fdtipo_url.toLowerCase()+'/tabla/'+html.toLowerCase();
+        
+        if (typeof ga === 'function') {
+            gtag('event', 'page_view', {
+            'page_location': url,
+            'page_title': html + ' - Finanzas Digital'
+          });
+        }
+
         window.history.pushState("object or string", "Title", "/"+ url);
         
         document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
