@@ -54,7 +54,22 @@ class FDEstadisticas {
                 add_shortcode( 'fdtable', array('FDEstadisticas', 'fdtable_shortcode_fn') );
                 add_filter( 'wpseo_canonical', array('FDEstadisticas', 'urlcanonical'));
                 add_filter( 'get_canonical_url', array('FDEstadisticas', 'urlcanonical'),10, 1);
+                
+                add_filter( 'wpseo_title', array('FDEstadisticas','prefix_filter_title_example') );
 	}
+        
+        public static function prefix_filter_title_example( $title ) {
+          if ( is_page( 'estadisticas' ) ) {
+            $temp = self::$combos['tabla'];
+            if (self::$combos['tabla']!=null){
+              $matches  = preg_grep("/\bselected\b/", $temp);
+              preg_match('/data-seo="([^"]*)"/', array_values($matches)[0], $matches_alt);
+              $title = $matches_alt[1] !== 'false' ? $matches_alt[1]. ' - Finanzas Digital' : $title;
+            }
+            
+          }
+          return $title;
+        }
         
         public static function urlcanonical($canonical_url ){
           
@@ -248,11 +263,19 @@ class FDEstadisticas {
                       if (!empty(trim($line))){
                           $data = explode(';', trim($line));
                           if((int)$data[4] == 1) {
+                              if ($key == 'fdtipo'){
+                                  $combo_formato[] = array('dataseo' => (isset($data[4]) ? empty($data[4]) ? 'false' : $data[4] : 'false') , 'datafoo' => $data[2], 'value' => ltrim($data[1]), 'title' => $data[0], 'dataurl' => ltrim($data[3]) );
+                              }else{
                                   $combo_formato[] = array('datafoo' => $data[2], 'value' => ltrim($data[1]), 'title' => $data[0], 'dataurl' => ltrim($data[3]) );
+                              }
                                   $p_selected = $data[1];
                           }
                           else {
+                              if ($key == 'fdtipo'){
+                                  $combo_formato[] = array('dataseo' => (isset($data[4]) ? empty($data[4]) ? 'false' : $data[4] : 'false'), 'datafoo' => $data[2], 'value' => ltrim($data[1]), 'title' => $data[0] , 'dataurl' => ltrim($data[3]) );
+                              }else{
                                   $combo_formato[] = array('datafoo' => $data[2], 'value' => ltrim($data[1]), 'title' => $data[0] , 'dataurl' => ltrim($data[3]) );
+                              }
                           }
                           if ($count == 0){
                             $aux_selectd = $data[1];
@@ -275,7 +298,7 @@ class FDEstadisticas {
                     return !empty($v);
                 }, ARRAY_FILTER_USE_BOTH);
                 $exist_query_var = sizeof($from_url) > 0 ? true : false ;
-                $keys = array('title','value', 'title2', 'url', 'default');
+                $keys = array('title','value', 'title2', 'url', 'default', 'seo');
                 $attributes = array();
                 $combos = array();
 
@@ -300,8 +323,10 @@ class FDEstadisticas {
                     }
                     // add keys to values from conexion file
                     $array_mapped = array_map(function ($lock) use ($keys) {
-                      if ( sizeof($keys) !== sizeof($lock) ) {
-                        throw new Exception("missing match url");
+                      if ( sizeof($keys) !== sizeof($lock)) {
+                        //30042024
+                        //throw new Exception("missing match url");
+                        array_pop($keys);
                       }
                       return array_combine($keys, $lock);
                     }, $attributes);
@@ -314,7 +339,7 @@ class FDEstadisticas {
                         }else{
                           $selection = ($data['default'] == 1 ? "selected" : "");
                         }
-                        return '<option data-title2="'.$data['title2'].'" data-foo="'.$data['title'].'" value="'.ltrim($data['value']).'" data-url="'.ltrim(array_key_exists('url',$data) ? $data["url"] : $data['value']).'"  '.$selection.'>' .$data['title']. '</option>';
+                        return '<option '.($type == "tabla" ? ( isset($data['seo']) ? 'data-seo="'.$data['seo'].'" ' : 'data-seo="false"') : '').'data-title2="'.$data['title2'].'" data-foo="'.$data['title'].'" value="'.ltrim($data['value']).'" data-url="'.ltrim(array_key_exists('url',$data) ? $data["url"] : $data['value']).'"  '.$selection.'>' .$data['title']. '</option>';
                     }, $array_mapped);
 
                     // check and get if exists default selection

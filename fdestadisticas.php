@@ -18,7 +18,7 @@ if ( !function_exists( 'add_action' ) ) {
 	exit;
 }
 
-define( 'FDESTADISTICAS_VERSION', '2.4' );
+define( 'FDESTADISTICAS_VERSION', '2.5' );
 define( 'FDESTADISTICAS__MINIMUM_WP_VERSION', '5.0' );
 define( 'FDESTADISTICAS__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 

@@ -116,20 +116,26 @@ jQuery(function ($) {
       $pais_url = $('#fdpais').find(':selected').attr('data-url');
       $formato_url = $('#fdformato').find(':selected').attr('data-url');
       $fdtipo_url = $('#fdtipo').find(':selected').attr('data-url');
+      $tieneSEO = $('#fdindicador').find(':selected').attr('data-seo');
       var url = fdtable.baseslug + $pais_url.toLowerCase()+'/'+$formato_url.toLowerCase()+'/'+$fdtipo_url.toLowerCase()+'/tabla/'+html.toLowerCase();
       
       window.history.pushState("object or string", "Title", "/"+ url);
       //FEATURE - Share Social Networks
       document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
-      document.querySelector('meta[property="og:title"]').setAttribute("content", html );
-      document.title = html + ' - Finanzas Digital';
+      if ($tieneSEO !== 'false'){
+        document.querySelector('meta[property="og:title"]').setAttribute("content", $tieneSEO );
+        document.title = $tieneSEO + ' - Finanzas Digital';
+      }else{
+        document.querySelector('meta[property="og:title"]').setAttribute("content", html );
+        document.title = html + ' - Finanzas Digital';
+      }
       
       if ( !fdtable.is_sassy_active ) {
         jQuery('.ot-tweet').ot_tweet();
         jQuery('.ot-link').ot_link();
         jQuery('.ot-face').ot_face();
       }else{
-        var _url = $('.heateor_sss_button_twitter').attr('href');
+        var _url = $('.heateor_sss_button_x').attr('href');
         _url = _url.split("?")[0]+"?text"+document.title+"&url="+window.location.href;
         $('.heateor_sss_button_twitter').attr('href',_url);
         
@@ -202,7 +208,7 @@ jQuery(function ($) {
           $.each(data.combos, function (i, item) {
             var select = $('#' + item.id).empty();
             $.each(item.combo, function (i, x) {
-              select.append('<option data-foo="'+x.title+'" data-title2="'+x.datafoo+'" value="'
+              select.append('<option '+(item.id == 'fdindicador' ? 'data-seo="'+x.dataseo+'"' : '')+'data-foo="'+x.title+'" data-title2="'+x.datafoo+'" value="'
                       + x.value
                       + '"' + (x.value == item.selected ? 'selected' : '') + ' data-url="'+x.dataurl+'" >'
                       + x.title
@@ -239,6 +245,7 @@ jQuery(function ($) {
         $pais_url = $('#fdpais').find(':selected').attr('data-url');
         $formato_url = $('#fdformato').find(':selected').attr('data-url');
         $fdtipo_url = $('#fdtipo').find(':selected').attr('data-url');
+        $tieneSEO = $('#fdindicador').find(':selected').attr('data-seo');
         var html = $('#fdindicador').val();
         var url = fdtable.baseslug + $pais_url.toLowerCase()+'/'+$formato_url.toLowerCase()+'/'+$fdtipo_url.toLowerCase()+'/tabla/'+html.toLowerCase();
         
@@ -252,8 +259,13 @@ jQuery(function ($) {
         window.history.pushState("object or string", "Title", "/"+ url);
         
         document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
-        document.querySelector('meta[property="og:title"]').setAttribute("content", html );
-        document.title = html + ' - Finanzas Digital';
+        if ($tieneSEO !== 'false' && $tieneSEO !== undefined ){
+          document.querySelector('meta[property="og:title"]').setAttribute("content", $tieneSEO );
+          document.title = $tieneSEO + ' - Finanzas Digital';
+        }else{
+          document.querySelector('meta[property="og:title"]').setAttribute("content", html );
+          document.title = html + ' - Finanzas Digital';
+        }
 
         $('.tablatitulo').html("<h2>"+$('#fdindicador option:selected').attr("data-foo")+"</h2>");
         $('.tablatitulo').append("<h2>"+$('#fdindicador option:selected').attr("data-title2")+"</h2>");
@@ -263,7 +275,7 @@ jQuery(function ($) {
           jQuery('.ot-link').ot_link();
           jQuery('.ot-face').ot_face();
         }else{
-          var _url = $('.heateor_sss_button_twitter').attr('href');
+          var _url = $('.heateor_sss_button_x').attr('href');
           _url = _url.split("?")[0]+"?text"+document.title+"&url="+window.location.href;
           $('.heateor_sss_button_twitter').attr('href',_url);
 
